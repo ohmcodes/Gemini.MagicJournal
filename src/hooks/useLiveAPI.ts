@@ -59,7 +59,10 @@ export function useLiveAPI(apiKey: string) {
   }, []);
 
   const connect = useCallback(async () => {
-    if (!apiKey) return;
+    if (!apiKey) {
+      console.error('API Key is missing');
+      return;
+    }
 
     try {
       const ai = new GoogleGenAI({ apiKey });
@@ -97,13 +100,13 @@ export function useLiveAPI(apiKey: string) {
       workletNodeRef.current.connect(audioContextRef.current.destination);
 
       const sessionPromise = ai.live.connect({
-        model: 'gemini-2.5-flash-native-audio-preview-12-2025',
+        model: 'gemini-2.5-flash-native-audio-preview-09-2025',
         config: {
           responseModalities: [Modality.AUDIO],
           speechConfig: {
             voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Puck' } },
           },
-          systemInstruction: { parts: [{ text: "You are a friendly magical journal companion for a child. You appear as a cute robot. You can see them through the camera. Ask them about their day. Keep responses short and engaging. When they say they are done, say a warm goodbye and end your response with '[JOURNAL_FINISHED]'." }] },
+          systemInstruction: "You are a friendly magical journal companion for a child. You appear as a cute robot. You can see them through the camera. Ask them about their day. Keep responses short and engaging. When they say they are done, say a warm goodbye and end your response with '[JOURNAL_FINISHED]'.",
         },
         callbacks: {
           onopen: () => {
