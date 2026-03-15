@@ -97,36 +97,18 @@ export function useLiveAPI(apiKey: string) {
       workletNodeRef.current.connect(audioContextRef.current.destination);
 
       const sessionPromise = ai.live.connect({
-        model: 'gemini-2.5-flash-native-audio-preview-09-2025',
+        model: 'gemini-2.5-flash-native-audio-preview-12-2025',
         config: {
           responseModalities: [Modality.AUDIO],
           speechConfig: {
             voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Puck' } },
           },
-          systemInstruction: "You are a friendly magical journal companion for a child. You appear as a cute robot. You can see them through the camera. Ask them about their day. Keep responses short and engaging. When they say they are done, say a warm goodbye and end your response with '[JOURNAL_FINISHED]'.",
-          inputAudioTranscription: {},
-          outputAudioTranscription: {},
+          systemInstruction: { parts: [{ text: "You are a friendly magical journal companion for a child. You appear as a cute robot. You can see them through the camera. Ask them about their day. Keep responses short and engaging. When they say they are done, say a warm goodbye and end your response with '[JOURNAL_FINISHED]'." }] },
         },
         callbacks: {
           onopen: () => {
             setIsConnected(true);
             isConnectedRef.current = true;
-            
-            // Send initial message to make the AI talk right away
-            sessionPromise.then(session => {
-              if (!isConnectedRef.current) return;
-              try {
-                session.sendClientContent({
-                  turns: [{
-                    role: 'user',
-                    parts: [{ text: "Hello! I'm ready to journal. Please greet me and ask about my day!" }]
-                  }],
-                  turnComplete: true
-                });
-              } catch (e) {
-                console.error('Error sending initial message:', e);
-              }
-            });
             
             let audioBuffer: Int16Array[] = [];
             let audioBufferLength = 0;
