@@ -1,0 +1,5 @@
+{
+  "name": "Magic Journal",
+  "description": "A magical voice-interactive journal that listens to a child's day and transforms their experiences into an illustrated, personalized storybook adventure.",
+  "requestFramePermissions": ["microphone", "camera"]
+}
